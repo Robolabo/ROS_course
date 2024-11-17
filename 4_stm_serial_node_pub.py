@@ -13,15 +13,11 @@ class SerialPublisherNode(Node):
         """
         Initialize the SerialPublisherNode with a publisher and serial interface.
         """
-        super().__init__('serial_publisher_node')
+        super().__init__('stm_serial_node')
 
-        # Declare parameters for serial port configuration
-        self.declare_parameter('port', '/dev/ttyUSB0')
-        self.declare_parameter('baudrate', 115200)
-
-        # Get parameters
-        self.port = self.get_parameter('port').value
-        self.baudrate = self.get_parameter('baudrate').value
+        # Get Serial Configuration Values 
+        self.port = '/dev/ttyUSB0'
+        self.baudrate = 115200
         self.loop_frequency = 1000  # Hz
 
         # Create a publisher for Float32MultiArray messages
