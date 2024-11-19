@@ -10,31 +10,35 @@ class SerialInterface:
         self.baudrate = baudrate
         self.ser = None
         self.running = True
-        self.reading = False
         self.callback = callback  # Función para manejar los datos recibidos
         self.connect()
 
     def connect(self):
         try:
+            # Define the serial port connection
             self.ser = serial.Serial(self.port, self.baudrate, timeout=1)
         except serial.SerialException:
             self.ser = None
 
     def is_connected(self):
+        # Check if the serial port is open
         return self.ser is not None and self.ser.is_open
 
     def send_data(self, data):
         if self.is_connected():
+            # Send the data to the serial port adding a newline as a delimiter
             self.ser.write((data + '\n').encode('utf-8'))
 
     def read_data(self):
-        self.reading = True
-        while self.running and self.reading and self.is_connected():
+        while self.running and self.is_connected():
+            # Check if there is data available to read (data > 0)
             if self.ser.in_waiting > 0:
+                # Read the incoming data from the serial port
                 data = self.ser.readline().decode('utf-8').strip()
                 if data:
                     try:
                         # Parse the incoming data as a vector of floats
+                        # Using a for method to remove the curly braces, split by commas, convert to float and store in a list
                         vector = [float(x) for x in data.strip('{}').split(',')]
                         # Call the callback function to update GUI
                         if self.callback:
@@ -46,7 +50,6 @@ class SerialInterface:
 
     def stop(self):
         self.running = False
-        self.reading = False
         if self.is_connected():
             self.ser.close()
 
