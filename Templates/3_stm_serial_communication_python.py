@@ -146,7 +146,8 @@ class App:
             setpoint = self.setpoint_entry.get()
             kp = self.kp_entry.get()
             pwm = self.pwm_entry.get()
-
+            
+            # Send the data as a string with the format {modo_control,setpoint,kp,pwm}
             data = f"{{{modo_control},{setpoint},{kp},{pwm}}}"
             self.serial_interface.send_data(data)
             time.sleep(0.1)
