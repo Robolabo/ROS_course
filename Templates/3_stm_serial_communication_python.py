@@ -1,23 +1,33 @@
+
+# Import the necessary libraries
 import tkinter as tk
 from tkinter import ttk, messagebox
 import serial
 import threading
 import time
 
+# Define the SerialInterface class
 class SerialInterface:
     def __init__(self, port='/dev/ttyACM0', baudrate=115200, callback=None):
-        self.port = port
-        self.baudrate = baudrate
-        self.ser = None
-        self.running = True
-        self.callback = callback  # Función para manejar los datos recibidos
-        self.connect()
+        """
+        Initialize the SerialInterface with the specified port, baudrate, and callback function.
+        """
+        self.port = port            # Serial port name
+        self.baudrate = baudrate    # Baud rate for serial communication
+        self.ser = None             # Serial port object
+        self.running = True         # Flag to keep the reading thread running
+        self.callback = callback    # Callback function to update the GUI
+        self.connect()              # Connect to the serial port
 
     def connect(self):
+        """
+        Connect to the serial port using the specified port and baudrate.
+        """
         try:
             # Define the serial port connection
             self.ser = serial.Serial(self.port, self.baudrate, timeout=1)
         except serial.SerialException:
+            # Handle any exceptions that occur during the connection
             self.ser = None
 
     def is_connected(self):
@@ -33,7 +43,7 @@ class SerialInterface:
         while self.running and self.is_connected():
             # Check if there is data available to read (data > 0)
             if self.ser.in_waiting > 0:
-                # Read the incoming data from the serial port
+                # Read the incoming data from the serial port, decode it, and remove leading/trailing whitespace
                 data = self.ser.readline().decode('utf-8').strip()
                 if data:
                     try:
@@ -70,18 +80,15 @@ class App:
         self.modo_control_label = tk.Label(root, text="Modo Control:")
         self.modo_control_label.grid(row=1, column=0)
         self.modo_control_entry = tk.Entry(root)
-        self.modo_control_entry.grid(row=1, column=1)
-
+        self.modo_control_entry.grid(row=1, column=1)        
         self.setpoint_label = tk.Label(root, text="Setpoint:")
         self.setpoint_label.grid(row=2, column=0)
         self.setpoint_entry = tk.Entry(root)
         self.setpoint_entry.grid(row=2, column=1)
-
         self.kp_label = tk.Label(root, text="KP:")
         self.kp_label.grid(row=3, column=0)
         self.kp_entry = tk.Entry(root)
         self.kp_entry.grid(row=3, column=1)
-
         self.pwm_label = tk.Label(root, text="PWM:")
         self.pwm_label.grid(row=4, column=0)
         self.pwm_entry = tk.Entry(root)
@@ -90,13 +97,10 @@ class App:
         # Buttons arranged in pairs
         self.send_button = ttk.Button(root, text="Start Sending", command=self.start_sending)
         self.send_button.grid(row=5, column=0)
-
         self.stop_button = ttk.Button(root, text="Stop Sending", command=self.stop_sending)
         self.stop_button.grid(row=5, column=1)
-
         self.start_reading_button = ttk.Button(root, text="Start Reading", command=self.start_reading)
         self.start_reading_button.grid(row=6, column=0)
-
         self.stop_reading_button = ttk.Button(root, text="Stop Reading", command=self.stop_reading)
         self.stop_reading_button.grid(row=6, column=1)
 
@@ -159,7 +163,6 @@ class App:
                 self.data_entries[i].insert(0, str(value))
         elif isinstance(data, list) and data[0] == "Invalid data received":
             print("ErrorData")
-            #messagebox.showwarning("Warning", data[0])
 
     def check_connection_status(self):
         while True:
