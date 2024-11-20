@@ -131,23 +131,22 @@ class STMControlNode(Node):
         """
         # TODO: Initialize a STMControl message that will be published to the slave node
         control_msg = STMControl()
-        if self.control_type >1 or self.control_type <0:
+        if self.control_type >=0 and self.control_type <=2:
             control_msg.control_type = ... 
             control_msg.kp = ...
             control_msg.position_setpoint = ...
 
-
             # Close loop for position control using PWM
             # Calculate the error between the master and slave positions
-            error = self.master_position - self.slave_position
-            # Calculate the control command using the proportional gain
-            control_command = self.kp * error
+            error = ...
+            # Calculate the control command using the proportional gain constant
+            control_command = ...
             # Limit the control command to the valid range
             pwm_limit = 250.0  # Maximum PWM value !!
             control_command = max(-pwm_limit, min(pwm_limit, control_command))
             
             # TODO: Update the PWM control command in the STMControl message
-            control_msg ...
+            control_msg = ...
 
         else:
             # Handle unknown control types

@@ -1,4 +1,4 @@
-# The Objective:
+# Objective:
 # To create a ROS 2 node that uses parameters in a service to add two integers 
 # and an extra term defined by the parameter value and return the sum.
 
