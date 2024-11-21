@@ -79,7 +79,9 @@ class STMVisualizationNode(Node):
         corrected_accel = ...  # Corrected acceleration
 
         # Step 3.5 Integrate the corrected acceleration to get velocity and position
-        if np.linalg.norm(corrected_accel) > 0.5:
+        # Avoid Drift: Integrate only when the acceleration is greater than a given threshold
+        threshold = 0.5
+        if np.linalg.norm(corrected_accel) > threshold:
             # Integrate the acceleration to get the position
             self.velocity[0] = self.velocity[0] + corrected_accel[0] * dt  # Update velocity in x direction
             self.velocity[1] = self.velocity[0] +  * dt  # Update velocity in y direction
@@ -102,9 +104,9 @@ class STMVisualizationNode(Node):
         transform = TransformStamped()
         
         # Step 4.2 TODO: Set the frame details for the transform
-        transform.header.stamp = self.get_clock().now().to_msg()    # Set the same timestamp as the message received from the STM
-        transform.header.frame_id = ...                             # Parent frame (world frame)
-        transform.child_frame_id = ...                              # Child frame (STM frame)
+        transform.header.stamp = self.get_clock().now().to_msg()            # Set the same timestamp as the message received from the STM
+        transform.header.frame_id = 'world'                                 # Parent frame (fixed frame)
+        transform.child_frame_id = f'/group_{self.group_id}/stm_station'    # Child frame for STM serial node
 
         # Step 4.3 TODO: Set the translation (position) values
         transform.transform.translation.x = ...         # x position

@@ -1,6 +1,8 @@
 # Objective:
-# The goal of this exercise is to create a ROS2 node named 'STMControlNode' that controls the slave STM motor using Stop, Position Control modes and
-# controls the slave STM motor using the PWM and closing the control loop inside the node.
+# The goal of this exercise is to create a ROS2 node named 'STMControlNode' that controls the slave STM motor using Stop, Master-Slave Position Control and Close loop PWM Control. 
+# This last control approach, closes the control loop inside of the node controling the slave STM motor adjusting the PWM based on the position error between the master and slave 
+# STM motor encoder position. So the control output looks like this:
+#       control_outut = kp * error_position
 # - Parameters are used to configure the group IDs for the master and slave nodes, services to change the control type dynamically, and a timer to control the STM at a specific frequency.
 # - Services are used to change the control type and gain dynamically. 
 #      -The control types are Stop (0), Position Control (1), Close loop PWM Control (2).
@@ -111,9 +113,20 @@ class STMControlNode(Node):
         # TODO: Update control_type based on the service request values
         # Set the control type to the requested value:
         # 0 = Stop, 1 = Position Control
-        self.control_type = request...
-        # Update control gain based on the received requested message
-        self.kp = request...
+        # If an invalid control type is requested, default to Stop (0)
+        if (request.control_type == 0 or request.control_type == 1):
+            self.control_type = request...
+        else:
+            self.control_type = 0
+            self.get_logger().warning(f"Invalid control type: {request.control_type}. Defaulting to Stop (0)")
+
+        # TODO: Update control gain based on the received requested message, 
+        # ensure the value is non-negative
+        if request.kp >= 0.0:
+            self.kp = request...
+        else:
+            self.kp = 0.0
+            self.get_logger().warning(f"Invalid control gain: kp={request.kp}. Defaulting to kp={self.kp}")
 
         # Log the updated control type
         self.get_logger().info(f"Control type set to: {self.control_type}")
@@ -131,17 +144,20 @@ class STMControlNode(Node):
         """
         # TODO: Initialize a STMControl message that will be published to the slave node
         control_msg = STMControl()
+        # Do things if control type is 0 (Stop), 1 (Position Control) or 2 (Close loop PWM Control)
         if self.control_type >=0 and self.control_type <=2:
+            # TODO: Fill in the control message based on the control type and control constant received from the service request
+            # and the slave setpoint position based on the master position received from the subscriber
             control_msg.control_type = ... 
             control_msg.kp = ...
             control_msg.position_setpoint = ...
 
-            # Close loop for position control using PWM
-            # Calculate the error between the master and slave positions
+            # TODO: Close loop for position control using PWM
+            # TODO: Calculate the error between the master and slave positions
             error = ...
-            # Calculate the control command using the proportional gain constant
+            # TODO: Calculate the control command using the proportional gain constant
             control_command = ...
-            # Limit the control command to the valid range
+            # Saturate the control command to the valid range
             pwm_limit = 250.0  # Maximum PWM value !!
             control_command = max(-pwm_limit, min(pwm_limit, control_command))
             
