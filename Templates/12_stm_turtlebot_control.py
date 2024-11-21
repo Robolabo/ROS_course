@@ -45,6 +45,9 @@ class STMTurtleBotControlNode(Node):
         :param msg: STMState message containing motor velocity and gyro data.
         """
         # Step 3.1 TODO: Create the speed control message 
+        # Transform the received rotational speed of the motors to linear speed in the x-axis 
+        # taking into account the number of ticks per revolution of the motor, the reduction ratio, 
+        # and the wheel radius.
         twist = ...
 
         # Step 3.2 TODO: Extract and map motor_velocity to linear speed in the x-axis

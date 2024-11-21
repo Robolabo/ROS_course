@@ -61,7 +61,7 @@ class STMVisualizationNode(Node):
         # Step 3.2 TODO: Update the rotation based on the received motors turns
         # Change the units from encoder ticks to radians, remember that 1 revolution = 2*pi radians, 
         # the reduction ratio is 1:9.7, and the encoder has 24 ticks per revolution
-        # self.rotation = 
+        self.rotation = 
 
 
         # Step 3.2 TODO: If it is the first reading, set the offset acceleration       
