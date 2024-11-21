@@ -1,0 +1,10 @@
+# GetControlVariables.srv
+
+# Request
+# (No fields required for the request)
+---
+# Response
+int32 control_type   # Current control type
+float32 setpoint     # Current setpoint
+float32 kp        # Current PID parameter
+float32 pwm          # Current PWM value
