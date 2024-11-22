@@ -14,6 +14,8 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),                  # Add ament resource index file for the package
         ('share/' + package_name, ['package.xml']),         # Add the package.xml file to provide metadata about the package
+        (os.path.join('share', package_name, 'launch'),     
+        glob('launch/*.py')),                               # Add all Python launch files from the launch/ directory
     ],
     install_requires=['setuptools'],                        # Dependencies required for the package
     zip_safe=True,                                          # Ensures the package can be safely installed as a .zip file
