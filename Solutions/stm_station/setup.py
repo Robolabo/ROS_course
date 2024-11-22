@@ -25,6 +25,7 @@ setup(
     entry_points={                                          # Define the command-line executables and their corresponding Python entry points    
         'console_scripts': [
             'stm_serial_node = stm_station.stm_serial_node:main', 
+            'stm_visualization_node = stm_station.stm_visualization_node:main',
         ],
     },  
 )
