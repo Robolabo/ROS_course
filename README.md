@@ -1,4 +1,4 @@
-# ROS 2 Course Node Templates Repository
+# ROS 2 Course
 
 ## Overview
 This repository contains Python templates for developing nodes as part of the ROS 2 course. Each template is designed to demonstrate and implement specific ROS 2 concepts, progressively building the students' understanding of ROS 2 nodes, topics, services, parameters, and control systems. 
