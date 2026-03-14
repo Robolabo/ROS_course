@@ -3,7 +3,7 @@
 ## Overview
 This repository contains Python templates for developing nodes as part of the ROS 2 course. Each template is designed to demonstrate and implement specific ROS 2 concepts, progressively building the students' understanding of ROS 2 nodes, topics, services, parameters, and control systems. 
 
-The templates are numbered and organized to follow the course progression, starting with basic publisher-subscriber nodes and culminating in more complex control nodes with impedance control.
+The templates are numbered and organized to follow the course progression, starting with basic publisher-subscriber nodes and culminating in more complex control, visualization, and navigation exercises.
 
 ---
 
@@ -44,6 +44,22 @@ The templates are numbered and organized to follow the course progression, start
 9. **9_stm_control_node_impedance.py**  
    - A control node template for implementing impedance control.  
    - Demonstrates advanced control using virtual spring-damper models.
+
+10. **10_stm_control_node_master_slave_impedance_control.py**
+   - A more complete STM control template with master-slave logic.
+   - Demonstrates parameterized control with custom interfaces.
+
+11. **11_stm_visualization.py**
+   - A visualization template for STM data.
+   - Demonstrates TF broadcasting and state integration for RViz.
+
+12. **12_stm_turtlebot_control.py**
+   - A TurtleBot control template driven from STM messages.
+   - Demonstrates converting STM data into robot velocity commands.
+
+13. **13_bug0_lidar_stm.py**
+   - A Bug0 obstacle avoidance template using LiDAR data.
+   - Demonstrates slicing the `/scan` vector and publishing fixed commands to both simulation and STM hardware.
 
 ---
 
