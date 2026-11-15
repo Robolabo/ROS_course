@@ -1,0 +1,15 @@
+stm_serial_node:
+  ros__parameters:
+    # Add your stm_serial_node parameters here (examples below)
+    serial_port: "/dev/ttyACM0"
+    baud_rate: 115200
+
+stm_control_node_master_slave:
+  ros__parameters:
+    master_group_id: 1
+    slave_group_id: 2
+
+stm_visualization_node:
+  ros__parameters:
+    # Add any visualization parameters here (or leave empty/omit if none)
+    frame_id: "base_link"
