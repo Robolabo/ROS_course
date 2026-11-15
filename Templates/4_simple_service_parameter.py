@@ -11,7 +11,7 @@ from ....srv import ...
 class AddTwoIntsServer(Node):
     def __init__(self):
         super().__init__('add_two_ints_server')
-        
+
         # Register callback to detect parameter updates dynamically
         self.add_on_set_parameters_callback(self.parameter_callback)
 
@@ -44,7 +44,7 @@ class AddTwoIntsServer(Node):
                 self.get_logger().info(f"Updated extra_term to: {self.extra_term}")
 
         # TODO: Return SetParametersResult confirming success
-        return SetParametersResult(successful=True)
+        return SetParametersResult(successful=True, reason="Parameters updated successfully.")
 
 def main(args=None):
     rclpy.init(args=args)

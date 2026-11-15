@@ -12,6 +12,7 @@
 
 import rclpy
 from rclpy.node import Node
+from rcl_interfaces.msg import SetParametersResult # Used to handle parameter changes dynamically
 
 # 1. Import necessary libraries and custom message/service types
 # TODO: Import the custom message types STMState and STMControl
@@ -26,6 +27,9 @@ class STMControlNode(Node):
         # Initialize the ROS 2 node with a unique name 'stm_control_node'
         super().__init__('stm_control_node')
         
+        # Add a callback to handle parameter changes dynamically (e.g., changing topics at runtime based on group IDs parameters)
+        self.add_on_set_parameters_callback(self.parameter_callback)
+
         # 3. TODO:  Declare parameters 'master_group_id' and 'slave_group_id as set default values
         # 'master_group_id': ID for the master STM data topic, set the default value to 1
         # 'slave_group_id': ID for the slave control command topic, set the default value to 2
@@ -113,13 +117,9 @@ class STMControlNode(Node):
         """
         # TODO: Update control_type based on the service request values
         # Set the control type to the requested value:
-        # 0 = Stop, 1 = Position Control
+        # 0 = Stop, 1 = Position Control, 2 = Position PWM Control
         # If an invalid control type is requested, default to Stop (0)
-        if (request.control_type == 0 or request.control_type == 1):
-            self.control_type = request...
-        else:
-            self.control_type = 0
-            self.get_logger().warning(f"Invalid control type: {request.control_type}. Defaulting to Stop (0)")
+        self.control_type = request.control_type if request.control_type in (0, 1, 2) else 0
 
         # TODO: Update control kp gain based on the received requested message, 
         # ensure the value is non-negative
@@ -145,7 +145,42 @@ class STMControlNode(Node):
         response.success = True
         return response
 
-    # 17. TODO: Implement control logic in timer_control_loop callback
+    # 17. TODO: Implement the parameter callback to handle dynamic changes in group IDs
+    def parameter_callback(self, params):
+        """
+        Callback triggered whenever a parameter is changed via 'ros2 param set'.
+        Recreates the publisher or subscriber if group IDs are updated.
+
+        :param params: List of rclpy.parameter.Parameter objects that were modified.
+        :return: SetParametersResult indicating whether the parameter change succeeded.
+        """
+        for param in params:
+            if param.name == 'master_group_id':
+                # TODO: Update master_group_id and master_state_topic
+                self.master_group_id = self.get_parameter(...
+                self.master_state_topic = f"/group_..."
+                
+                # TODO: If the subscriber already exists, destroy it and create a new one with the updated topic
+                if hasattr(self, 'master_stm_state_subscriber'):
+                    self.destroy_subscription(self.master_stm_state_subscriber)
+                    self.master_stm_state_subscriber = ...
+                    self.get_logger().info(f"Updated master subscriber to: {self.master_state_topic}")
+
+            elif param.name == 'slave_group_id':
+                # TODO: Update slave_group_id and slave_control_topic
+                self.slave_group_id = self.get_parameter(...
+                self.slave_control_topic = f"/group_..."
+                
+                # TODO: If the publisher already exists, destroy it and create a new one with the updated topic
+                if hasattr(self, 'slave_stm_control_publisher'):
+                    self.destroy_publisher(self.slave_stm_control_publisher)
+                    self.slave_stm_control_publisher = ...
+                    self.get_logger().info(f"Updated slave publisher to: {self.slave_control_topic}")
+
+        # Return SetParametersResult with successful=True
+        return SetParametersResult(successful=True)
+
+    # 18. TODO: Implement control logic in timer_control_loop callback
     def timer_callback(self):
         """
         timer_control_loop Callback to control the STM based on the current control type.
@@ -155,12 +190,6 @@ class STMControlNode(Node):
         control_msg = STMControl()
         # Do things if control type is 0 (Stop), 1 (Position Control) or 2 (Close loop PWM Control)
         if self.control_type >=0 and self.control_type <=2:
-            # TODO: Fill in the control message based on the control type and control constant received from the service request
-            # and the slave setpoint position based on the master position received from the subscriber
-            control_msg.control_type = ... 
-            control_msg.kp = ...
-            control_msg.position_setpoint = ...
-
             # TODO: Close loop for position control using PWM
             # TODO: Calculate the position error between the master and slave encoder positions
             error_pos = ...
@@ -181,7 +210,7 @@ class STMControlNode(Node):
             # TODO: Default to stop mode
             control_msg.control_type = 0
             control_msg.kp = 0.0
-            control_msg.position_setpoint = 0.0
+            control_msg.setpoint = 0.0
         
         # TODO: Publish the constructed control command
         ...

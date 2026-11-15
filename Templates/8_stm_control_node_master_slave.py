@@ -153,7 +153,6 @@ class STMControlNode(Node):
         # Log the published command for debugging and monitoring
         self.get_logger().info(f"Published control command: {control_msg}")
 
-
     # 17. TODO: Implement the parameter callback to handle dynamic changes in group IDs
     def parameter_callback(self, params):
         """
@@ -171,7 +170,7 @@ class STMControlNode(Node):
                 
                 # TODO: If the subscriber already exists, destroy it and create a new one with the updated topic
                 if hasattr(self, 'master_stm_state_subscriber'):
-                    ...
+                    self.destroy_subscription(self.master_stm_state_subscriber)
                     self.master_stm_state_subscriber = ...
                     self.get_logger().info(f"Updated master subscriber to: {self.master_state_topic}")
 
@@ -182,7 +181,7 @@ class STMControlNode(Node):
                 
                 # TODO: If the publisher already exists, destroy it and create a new one with the updated topic
                 if hasattr(self, 'slave_stm_control_publisher'):
-                    ...
+                    self.destroy_publisher(self.slave_stm_control_publisher)
                     self.slave_stm_control_publisher = ...
                     self.get_logger().info(f"Updated slave publisher to: {self.slave_control_topic}")
 
