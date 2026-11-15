@@ -10,6 +10,7 @@
 
 import rclpy
 from rclpy.node import Node
+from rcl_interfaces.msg import SetParametersResult # Used to handle parameter changes dynamically
 
 # 1. Import necessary libraries and custom message/service types
 # TODO: Import the custom message types STMState and STMControl
@@ -23,6 +24,9 @@ class STMControlNode(Node):
         """
         # Initialize the ROS 2 node with a unique name 'stm_control_node'
         super().__init__('stm_control_node')
+
+        # Add a callback to handle parameter changes dynamically (e.g., changing topics at runtime based on group IDs parameters)
+        self.add_on_set_parameters_callback(self.parameter_callback)
         
         # 3. TODO:  Declare parameters 'master_group_id' and 'slave_group_id as set default values
         # 'master_group_id': ID for the master STM data topic, set the default value to 1
@@ -133,14 +137,14 @@ class STMControlNode(Node):
             # and the slave setpoint position based on the master position received from the subscriber
             control_msg.control_type = ... 
             control_msg.kp = ...
-            control_msg.position_setpoint = ...
+            control_msg.setpoint = ...
         else:
             # Handle unknown control types
             self.get_logger().warning(f"Unknown control type: {self.control_type}")
             # TODO: Default to stop mode
             control_msg.control_type = 0
             control_msg.kp = 0.0
-            control_msg.position_setpoint = 0.0
+            control_msg.setpoint = 0.0
         
         # Publish the constructed control command
         # TODO: Publish the control message
@@ -148,6 +152,42 @@ class STMControlNode(Node):
 
         # Log the published command for debugging and monitoring
         self.get_logger().info(f"Published control command: {control_msg}")
+
+
+    # 17. TODO: Implement the parameter callback to handle dynamic changes in group IDs
+    def parameter_callback(self, params):
+        """
+        Callback triggered whenever a parameter is changed via 'ros2 param set'.
+        Recreates the publisher or subscriber if group IDs are updated.
+
+        :param params: List of rclpy.parameter.Parameter objects that were modified.
+        :return: SetParametersResult indicating whether the parameter change succeeded.
+        """
+        for param in params:
+            if param.name == 'master_group_id':
+                # TODO: Update master_group_id and master_state_topic
+                self.master_group_id = self.get_parameter(...
+                self.master_state_topic = f"/group_..."
+                
+                # TODO: If the subscriber already exists, destroy it and create a new one with the updated topic
+                if hasattr(self, 'master_stm_state_subscriber'):
+                    ...
+                    self.master_stm_state_subscriber = ...
+                    self.get_logger().info(f"Updated master subscriber to: {self.master_state_topic}")
+
+            elif param.name == 'slave_group_id':
+                # TODO: Update slave_group_id and slave_control_topic
+                self.slave_group_id = self.get_parameter(...
+                self.slave_control_topic = f"/group_..."
+                
+                # TODO: If the publisher already exists, destroy it and create a new one with the updated topic
+                if hasattr(self, 'slave_stm_control_publisher'):
+                    ...
+                    self.slave_stm_control_publisher = ...
+                    self.get_logger().info(f"Updated slave publisher to: {self.slave_control_topic}")
+
+        # Return SetParametersResult with successful=True
+        return SetParametersResult(successful=True)
 
 def main(args=None):
     """

@@ -26,8 +26,8 @@ class SerialPublisherNode(Node):
         self.get_logger().info(f'Node initialized with serial port {self.port} at {self.baudrate} baud.')
 
         # 5. TODO: Create a publisher to publish the received data from the serial port
-        # using Float32MultiArray messages from the std_msgs package in the topic '/stm_state'
-        self.stm_state_topic = '/stm_state'
+        # using Float32MultiArray messages from the std_msgs package in the topic 'stm_state'
+        self.stm_state_topic = 'stm_state'
         self.stm_state_publisher = ...
 
         # 6. Create a timer to read data periodically and publish it
@@ -59,12 +59,13 @@ class SerialPublisherNode(Node):
                     self.get_logger().warn('Data does not start and end with braces')
                     return
                 
-                # Split the data by commas
-                float_values = serial_data.split(',')
+                # Split the data by commas, then tranform the string values into floats 
+                string_float_values = serial_data.split(',')
+                float_values = [float(value) for value in string_float_values]
 
                 
                 if len(float_values) == 8:
-                    # Ensure the correct number of data parts is present (expected 8 fields)
+                    # TODO: Ensure the correct number of data parts is present (expected 8 fields) and fill variables
                     # 1. motor_position
                     # 2. motor_velocity
                     # 3. imu_acceleration_x
@@ -73,11 +74,15 @@ class SerialPublisherNode(Node):
                     # 6. imu_gyro_x
                     # 7. imu_gyro_y
                     # 8. imu_gyro_z
+                    motor_position = ...
 
                     # Create a Float32MultiArray message
                     # TODO: Create and populate the Float32MultiArray message
                     float32_multi_array_msg = Float32MultiArray()
-                    float32_multi_array_msg.data = [...]
+                    float32_multi_array_msg.data = [motor_position, motor_velocity ...
+
+                    # TODO: add a newline character to indicate the end of the command
+                    control_data += ...
 
                     # Publish the message
                     # TODO: Publish the float32_multi_array_msg
