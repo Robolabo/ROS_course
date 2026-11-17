@@ -4,7 +4,7 @@
 
 /**/stm_serial_node:
   ros__parameters:
-    serial_port: "/dev/ttyACM0"
+    serial_port: "/dev/ttyACM1"
     baud_rate: 115200
 
 /**/stm_control_node_master_slave:
