@@ -52,7 +52,7 @@ class SerialPublisherNode(Node):
 
                 # Check if data is properly formatted with braces
                 # Spected format: 
-                # {motor_position, motor_velocity, imu_acceleration_x, imu_acceleration_y, imu_acceleration_z, imu_gyro_x, imu_gyro_y, imu_gyro_z}
+                # {motor_encoder, motor_velocity, imu_acceleration_x, imu_acceleration_y, imu_acceleration_z, imu_gyro_x, imu_gyro_y, imu_gyro_z}
                 if serial_data.startswith('{') and serial_data.endswith('}'):
                     serial_data = serial_data[1:-1]  # Remove the braces
                 else:
@@ -66,7 +66,7 @@ class SerialPublisherNode(Node):
                 
                 if len(float_values) == 8:
                     # TODO: Ensure the correct number of data parts is present (expected 8 fields) and fill variables
-                    # 1. motor_position
+                    # 1. motor_encoder
                     # 2. motor_velocity
                     # 3. imu_acceleration_x
                     # 4. imu_acceleration_y
@@ -74,12 +74,12 @@ class SerialPublisherNode(Node):
                     # 6. imu_gyro_x
                     # 7. imu_gyro_y
                     # 8. imu_gyro_z
-                    motor_position = ...
+                    motor_encoder = ...
 
                     # Create a Float32MultiArray message
                     # TODO: Create and populate the Float32MultiArray message
                     float32_multi_array_msg = Float32MultiArray()
-                    float32_multi_array_msg.data = [motor_position, motor_velocity ...
+                    float32_multi_array_msg.data = [motor_encoder, motor_velocity ...
 
                     # TODO: add a newline character to indicate the end of the command
                     control_data += ...
