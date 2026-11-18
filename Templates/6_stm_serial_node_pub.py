@@ -81,9 +81,6 @@ class SerialPublisherNode(Node):
                     float32_multi_array_msg = Float32MultiArray()
                     float32_multi_array_msg.data = [motor_encoder, motor_velocity ...
 
-                    # TODO: add a newline character to indicate the end of the command
-                    control_data += ...
-
                     # Publish the message
                     # TODO: Publish the float32_multi_array_msg
                     ...

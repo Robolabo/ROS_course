@@ -8,7 +8,7 @@ import time
 
 # Define the SerialInterface class
 class SerialInterface:
-    def __init__(self, port='/dev/ttyACM0', baudrate=115200, callback=None):
+    def __init__(self, port='/dev/ttyACM1', baudrate=115200, callback=None):
         """
         Initialize the SerialInterface with the specified port, baudrate, and callback function.
         """
@@ -174,7 +174,7 @@ class App:
             time.sleep(1)
 
 if __name__ == "__main__":
-    serial_interface = SerialInterface(port='/dev/ttyACM0', baudrate=115200)
+    serial_interface = SerialInterface(port='/dev/ttyACM1', baudrate=115200)
     root = tk.Tk()
     app = App(root, serial_interface)
     root.mainloop()
